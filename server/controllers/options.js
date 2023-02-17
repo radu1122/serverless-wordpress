@@ -1,6 +1,6 @@
 import { mongoose } from "mongoose"
-import { reqAuth, MONGO_DB_URI } from "./helper"
-import { wp_options } from "../models/wp_options"
+import { reqAuth, MONGO_DB_URI } from "./../config/helper"
+import { wp_options, reqAuthAdmin } from "../models/wp_options"
 
 /**
  * req: {token: "token", body: {}}
@@ -22,13 +22,35 @@ export class OptionsController {
 
   // get all options from the database
   async getOptions(req) {
-    const authObject = await reqAuth(token);
+    const authObject = await reqAuth(req.token);
     if (!authObject.success) {
       return authObject;
     }
 
-    return await wp_options.find();
+    return { success: true, msg: "success", data: await wp_options.find() };
   }
+
+  // get a single option from the database
+  async getOption(req) {
+    const authObject = await reqAuth(req.token);
+    if (!authObject.success) {
+      return authObject;
+    }
+
+    return { success: true, msg: "success", data: await wp_options.find({ option_name: req.body.option_name }) };
+  }
+
+  // update a single option in the database
+  async updateOption(req) {
+    const authObject = await reqAuthAdmin(req.token);
+    if (!authObject.success) {
+      return authObject;
+    }
+
+    
+  }
+
+
 
 
 
