@@ -19,8 +19,28 @@ export class UsersController {
    * Private method used to connect to the DB.
    */
   #connect() {
-    mongoose.connect(MONGO_DB_URI);
     mongoose.set('strictQuery', true);
+    mongoose.connect(MONGO_DB_URI);
+  }
+
+  async register(req) {
+    if (!req.body.email || !req.body.password || !req.body.nicename || !req.body.type) {
+      return { success: false, msg: "Error: Invalid user data" }
+    }
+
+    console.log(`Registering user with name ${req.body.nicename} and email ${req.body.email}...`)
+
+    const user = await wp_users.find()
+
+    if (user.length == 0 ) {
+      return await this.registerAdmin(req.body.email, req.body.password, req.body.nicename)
+    } else if (user.length == 1) {
+      const authObject = await reqAuthAdmin(req.token);
+      if (!authObject.success) {
+        return authObject;
+      }
+      return await this.registerUser(req.token, req.body.email, req.body.password, req.body.nicename, req.body.type)
+    }
   }
 
   async registerAdmin(email, password, nicename) {    
@@ -42,11 +62,10 @@ export class UsersController {
     }
   }
 
-  async registerUser(req, email, password, nicename, type) {
+  async registerUser(token, email, password, nicename, type) {
     console.log(`Registering user with name ${nicename} and email ${email}...`)
 
-    console.log(req.token)
-    const authObject = await reqAuthAdmin(req.token);
+    const authObject = await reqAuthAdmin(token);
     if (!authObject.success) {
       return authObject;
     }
@@ -78,7 +97,7 @@ export class UsersController {
     return {success: true, msg: "success", data: await wp_users.find()}
   }
 
-  async updateUser(req, email, password, nicename) {
+  async updateUser(req) {
     console.log(`Update user with name ${nicename} and email ${email}...`)
 
     const authObject = await reqAuthAdmin(req.token);
@@ -86,18 +105,36 @@ export class UsersController {
       return authObject;
     }
 
-    console.log("Update user not implemented yet...")
+    if (!req.body.email) {
+      return { success: false, msg: "Error: No email provided" }
+    }
+
+    if (req.body.nicename) {
+      await wp_users.updateOne({ user_email: req.body.email }, { user_nicename: req.body.nicename})
+    }
+    if (req.body.password) {
+      await wp_users.updateOne({ user_email: req.body.email }, { user_pass: req.body.password})
+    }
+    if (req.body.type) {
+      await wp_users.updateOne({ user_email: req.body.email }, { user_type: req.body.type})
+    }
   }
 
-  async deleteUser(req, email) {
-    console.log(`Delete user with email ${email}...`)
+  async deleteUser(req) {
+    if(!req.body.email) {
+      return { success: false, msg: "Error: No email provided" }
+    }
+
+    console.log(`Delete user with email ${req.body.email}...`)
 
     const authObject = await reqAuthAdmin(req.token);
     if (!authObject.success) {
       return authObject;
     }
 
-    console.log("Delete user not implemented yet...") 
+    await wp_users.deleteOne({ user_email: req.body.email })
+
+    return { success: true, msg: "success" }
   }
 
   async logout(req) {
@@ -142,8 +179,6 @@ export class UsersController {
   async checkSession(req) {
     console.log("Check session request received...")
     
-    console.log(req.token)
-
     const authObject = await reqAuth(req.token);
     if (!authObject.success) {
       return authObject;
