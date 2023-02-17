@@ -47,10 +47,47 @@ export class OptionsController {
       return authObject;
     }
 
-    
+    await wp_options.updateOne({ option_name: req.body.option_name }, { option_value: req.body.option_value });
+    return { success: true, msg: "success" };
   }
 
+  // delete a single option from the database
+  async deleteOption(req) {
+    const authObject = await reqAuthAdmin(req.token);
+    if (!authObject.success) {
+      return authObject;
+    }
 
+    await wp_options.deleteOne({ option_name: req.body.option_name });
+    return { success: true, msg: "success" };
+  }
+
+  // create a single option in the database
+  async createOption(req) {
+    const authObject = await reqAuthAdmin(req.token);
+    if (!authObject.success) {
+      return authObject;
+    }
+
+    // check if option already exists
+    const optionExists = await wp_options.find({ option_name: req.body.option_name });
+    if (optionExists.length > 0) {
+      return { success: false, msg: "Option already exists" };
+    }
+
+    // create new option
+    const newOption = await wp_options.create({
+      option_name: req.body.option_name,
+      option_value: req.body.option_value,
+    });
+
+    // check if option was created
+    if (!newOption) {
+      return { success: false, msg: "Option could not be created" };
+    }
+
+    return { success: true, msg: "success" };
+  }
 
 
 
