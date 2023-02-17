@@ -14,3 +14,6 @@ classes:
   - path: controllers/users.js
     type: jsonrpc
     methods: []
+  - path: controllers/posts.js
+    type: jsonrpc
+    methods: []
