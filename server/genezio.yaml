@@ -11,3 +11,6 @@ classes:
   - path: ./controllers/options.js
     type: jsonrpc
     methods: []
+  - path: controllers/users.js
+    type: jsonrpc
+    methods: []
