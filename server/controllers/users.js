@@ -24,31 +24,63 @@ export class UsersController {
   }
 
   async register(req) {
+<<<<<<< HEAD
     if (!req.body.email || !req.body.password || !req.body.nicename || !req.body.type) {
       return { success: false, msg: "Error: Invalid user data" }
     }
 
     console.log(`Registering user with name ${req.body.nicename} and email ${req.body.email}...`)
+=======
+
+    if (!req.body.email || !req.body.password || !req.body.nicename) {
+      return { success: false, msg: "Error: Invalid user data" }
+    }
+
+    console.log(`Registering user with email ${req.body.email}...`)
+>>>>>>> 19c127080ddc0ee55429cce2c524b40c96503416
 
     const user = await wp_users.find()
 
     if (user.length == 0 ) {
       return await this.registerAdmin(req.body.email, req.body.password, req.body.nicename)
+<<<<<<< HEAD
     } else if (user.length == 1) {
+=======
+    } else if (user.length > 0) {
+      if (!req.token) {
+        return { success: false, msg: "Error: Not Authorized, token is missing" }
+      }
+
+>>>>>>> 19c127080ddc0ee55429cce2c524b40c96503416
       const authObject = await reqAuthAdmin(req.token);
       if (!authObject.success) {
         return authObject;
       }
+<<<<<<< HEAD
       return await this.registerUser(req.token, req.body.email, req.body.password, req.body.nicename, req.body.type)
+=======
+
+      if (!req.body.type) {
+        return { success: false, msg: "Error: Invalid user data" }
+      }
+
+      if (req.body.type === "admin") {
+        return await this.registerAdmin(req.body.email, req.body.password, req.body.nicename)
+      } else if (req.body.type === "editor") {
+        return await this.registerEditor(req.body.email, req.body.password, req.body.nicename)
+      } else {
+        return { success: false, msg: "Error: Invalid user type. We support admin or editor" }
+      }
+>>>>>>> 19c127080ddc0ee55429cce2c524b40c96503416
     }
   }
 
   async registerAdmin(email, password, nicename) {    
     console.log(`Registering admin with name ${nicename} and email ${email}...`)
 
-    const user = await wp_users.find()
-    if (user.length > 0 ) {
-      return { success: false, msg: "Error: Admin/Users already exists" }
+    const user = await wp_users.findOne({ user_email: email });
+    if (user) {
+      return { success: false, msg: "Error: User already exists" }
     } else {
       const saltedPassword = await saltPassword(password)
       await wp_users.create({
@@ -62,6 +94,7 @@ export class UsersController {
     }
   }
 
+<<<<<<< HEAD
   async registerUser(token, email, password, nicename, type) {
     console.log(`Registering user with name ${nicename} and email ${email}...`)
 
@@ -72,6 +105,13 @@ export class UsersController {
 
     const user = await wp_users.findOne({ email: email });
     if (user.length > 0 ) {
+=======
+  async registerEditor(email, password, nicename) {
+    console.log(`Registering user with name ${nicename} and email ${email}...`)
+
+    const user = await wp_users.findOne({ user_email: email });
+    if (user) {
+>>>>>>> 19c127080ddc0ee55429cce2c524b40c96503416
       return { success: false, msg: "User already exists" }
     } else {
       const saltedPassword = await saltPassword(password)
@@ -79,7 +119,7 @@ export class UsersController {
         user_email: email,
         user_nicename: nicename,
         user_pass: saltedPassword,
-        user_type: type,
+        user_type: "editor",
       });
 
       return { success: true, msg: "success" };
