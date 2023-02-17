@@ -1,6 +1,7 @@
 export const MONGO_DB_URI =
   "mongodb+srv://genezio:genezio@cluster0.c6qmwnq.mongodb.net/?retryWrites=true&w=majority";
 
+import bcrypt from "bcryptjs"
 import { ActiveSession } from "./../models/activeSession";
 import { wp_users } from "./../models/wp_users";
 
@@ -29,4 +30,14 @@ export async function reqAuthAdmin(token) {
   }
 
   return { success: true, session: session[0] };
+}
+
+export async function validatePassword(password, hash) {
+  return await bcrypt.compare(password, hash);
+}
+
+export async function saltPassword(password) {
+  const salt = await bcrypt.genSalt(10);
+  const saltedPassword = await bcrypt.hash(password, salt);
+  return saltedPassword;
 }
