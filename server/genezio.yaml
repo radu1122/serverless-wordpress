@@ -1,11 +1,12 @@
 name: serverless-wordpress
-region: us-east-1
+region: eu-central-1
 sdk:
   language: js
   options:
     runtime: browser
   path: ./../client/src/sdk
-frontend: {}
+frontend:
+  path: ./../client/build
 classes:
   - path: ./controllers/options.js
     type: jsonrpc
