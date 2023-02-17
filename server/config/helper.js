@@ -16,16 +16,18 @@ export async function reqAuth(token) {
 
 export async function reqAuthAdmin(token) {
   const session = await ActiveSession.find({ token: token });
-  if (session.length != 1) {
+  console.log("Session length ", session.length)
+  if (session.length < 1) {
     return { success: false, msg: "User is not logged on" };
   }
 
   const user = await wp_users.find({ _id: session[0].userId });
+
   if (user.length != 1) {
     return { success: false, msg: "User is not logged on" };
   }
 
-  if (user[0].user_type != "administrator") {
+  if (user[0].user_type != "admin") {
     return { success: false, msg: "User is not logged on" };
   }
 
