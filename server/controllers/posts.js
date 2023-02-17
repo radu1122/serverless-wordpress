@@ -41,7 +41,6 @@ export class PostsController {
                 post_title: req.body.post_title,
                 post_content: req.body.post_content,
                 post_excerpt: req.body.post_excerpt,
-                post_type: req.body.post_type,
                 post_tags: req.body.post_tags,
             })
             return { success: true, msg: "success" };
