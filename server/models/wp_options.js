@@ -11,4 +11,4 @@ const wp_optionsSchema = new mongoose.Schema({
 	},
 });
 
-export const wp_options = mongoose.model('wp_options', wp_optionsSchema);
+export const wp_options = mongoose.models.wp_options || mongoose.model('wp_options', wp_optionsSchema);

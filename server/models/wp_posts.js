@@ -38,4 +38,4 @@ const wp_postsSchema = new mongoose.Schema({
 	},
 });
 
-export const wp_posts = mongoose.model('wp_posts', wp_postsSchema);
+export const wp_posts = mongoose.models.wp_posts || mongoose.model('wp_posts', wp_postsSchema);

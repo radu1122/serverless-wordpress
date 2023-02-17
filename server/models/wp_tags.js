@@ -11,4 +11,4 @@ const wp_tagsSchema = new mongoose.Schema({
 	},
 });
 
-export const wp_tags = mongoose.model('wp_tags', wp_tagsSchema);
+export const wp_tags = mongoose.models.wp_tags || mongoose.model('wp_tags', wp_tagsSchema);
