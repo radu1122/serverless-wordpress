@@ -29,6 +29,4 @@ const wp_usersSchema = new mongoose.Schema({
 	},
 });
 
-const wp_users = mongoose.model('wp_users', wp_usersSchema);
-
-module.exports = wp_users;
+export const wp_users = mongoose.model('wp_users', wp_usersSchema);
