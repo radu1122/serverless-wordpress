@@ -88,9 +88,4 @@ export class OptionsController {
 
     return { success: true, msg: "success" };
   }
-
-
-
-
-
 }
