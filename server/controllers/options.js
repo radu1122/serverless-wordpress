@@ -1,6 +1,6 @@
 import { mongoose } from "mongoose"
 import { reqAuthAdmin, reqAuth, MONGO_DB_URI } from "./../config/helper"
-import { wp_tags } from "../models/wp_tags"
+import { wp_options } from "../models/wp_options"
 
 /**
  * req: {token: "token", body: {}}
