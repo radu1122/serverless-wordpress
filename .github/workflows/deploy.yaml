@@ -9,6 +9,8 @@ on:
 jobs:
   deploy-backend:
     runs-on: ubuntu-latest
+    env:
+      MONGO_DB_URI: ${{ secrets.MONGO_DB_URI }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -32,10 +34,10 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: genezio-generated-sdk
-          path: ./client/sdk
+          path: ./client/src/sdk
 
   deploy-frontend:
-    needs: deploy
+    needs: deploy-backend
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -48,10 +50,11 @@ jobs:
           token: ${{ secrets.GENEZIO_TOKEN }}
       - name: Test genezio installation
         run: genezio ls
+      # Use this to download the generated SDK
       - uses: actions/download-artifact@master
         with:
           name: genezio-generated-sdk
-          path: ./client/sdk
+          path: ./client/src/sdk
       - name: Build the frontend code
         working-directory: ./client
         run: npm run build
