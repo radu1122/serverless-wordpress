@@ -57,7 +57,7 @@ jobs:
           path: ./client/src/sdk
       - name: Build the frontend code
         working-directory: ./client
-        run: npm run build
+        run: npm i && npm run build
 
       # Make sure that you setup a subdomain in the `genezio.yaml` file
       # The frontend can be accessed at https://<your-subdomain>.app.genez.io
