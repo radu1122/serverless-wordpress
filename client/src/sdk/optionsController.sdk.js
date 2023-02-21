@@ -6,7 +6,7 @@
   import { Remote } from "./remote.js"
   
   export class OptionsController {
-      static remote = new Remote("https://zwar2u2742fyvvyoihyjjkzi3q0xtzdh.lambda-url.eu-central-1.on.aws/")
+      static remote = new Remote("http://127.0.0.1:8083/OptionsController")
   
       static async getOptions(req) {
           return OptionsController.remote.call("OptionsController.getOptions", req)  

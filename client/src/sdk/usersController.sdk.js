@@ -6,7 +6,7 @@
   import { Remote } from "./remote.js"
   
   export class UsersController {
-      static remote = new Remote("https://5ugnm6bumqomligeyuh5h7ffkm0qmpvh.lambda-url.eu-central-1.on.aws/")
+      static remote = new Remote("http://127.0.0.1:8083/UsersController")
   
       static async register(req) {
           return UsersController.remote.call("UsersController.register", req)  
