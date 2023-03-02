@@ -7,7 +7,6 @@ import { wp_options } from "../models/wp_options"
  * res: {success: true, msg: "success"} / { success: false, msg: "User is not logged on" }
  */
 
-
 export class OptionsController {
   constructor() {
     this.#connect();
