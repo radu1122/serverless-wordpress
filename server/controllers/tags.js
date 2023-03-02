@@ -77,7 +77,6 @@ export class TagsController {
       return { success: false, msg: "Tag was not created" };
     }
 
-
     return { success: true, msg: "success" };
   }
 }

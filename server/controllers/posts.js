@@ -2,6 +2,11 @@ import { mongoose } from "mongoose"
 import { wp_posts } from "../models/wp_posts"
 import { MONGO_DB_URI, reqAuth} from "../config/helper"
 
+/**
+ * req: {token: "token", body: {}}
+ * res: {success: true, msg: "success"} / { success: false, msg: "User is not logged on" }
+ */
+
 export class PostsController {
     constructor() {
         this.#connect();
@@ -10,7 +15,6 @@ export class PostsController {
     /**
      * Private method used to connect to the DB.
      */
-    
     #connect() {
         mongoose.connect(MONGO_DB_URI);
     }
